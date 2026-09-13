@@ -1,0 +1,7 @@
+services:
+  office-a:
+    environment:
+      COORDINATION_MODE: ${TUTORIAL_MODE:-local}
+  office-b:
+    environment:
+      COORDINATION_MODE: ${TUTORIAL_MODE:-local}

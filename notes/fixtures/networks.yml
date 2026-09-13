@@ -1,0 +1,3 @@
+networks:
+  coordination:
+    name: cap-kub-tutorial-coordination

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "02 single office and restart state loss",
+    "04 independent double booking",
+    "06 authoritative forwarding",
+    "07 authority outage and recovery",
+    "08 authority partition/client recovery; host during partition: TimeoutError: timed out",
+    "10 authority mode with booking records",
+    "11 manual replication duplicate delivery",
+    "12 asynchronous replication convergence and stable count",
+    "13 local partition, conflict convergence, stable duplicate count"
+  ],
+  "original_running_containers_still_present": true,
+  "docker": "29.7.2",
+  "compose": "Docker Compose version v5.5.1"
+}

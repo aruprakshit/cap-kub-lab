@@ -1,0 +1,7 @@
+services:
+  office-a:
+    ports: !override
+      - "127.0.0.1:14567:4567"
+  office-b:
+    ports: !override
+      - "127.0.0.1:14568:4567"
