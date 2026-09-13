@@ -3,6 +3,7 @@ services:
     build: .
     environment:
       OFFICE: a
+      COORDINATION_MODE: local
     ports:
       - "127.0.0.1:4567:4567"
     networks:
@@ -16,6 +17,7 @@ services:
     environment:
       OFFICE: b
       AUTHORITY_URL: http://office-a:4567
+      COORDINATION_MODE: local
     ports:
       - "127.0.0.1:4568:4567"
     networks:

@@ -2,6 +2,7 @@ require "sinatra"
 require "json"
 require "thread"
 require "net/http"
+require "securerandom"
 
 set :bind, "0.0.0.0"
 set :port, 4567
@@ -14,10 +15,15 @@ set :host_authorization, {
   ]
 }
 
-BOOKING = { customer: nil }
+BOOKINGS = {}
 BOOKING_LOCK = Mutex.new
 OFFICE = ENV.fetch("OFFICE", "a")
 AUTHORITY_URL = ENV.fetch("AUTHORITY_URL", "http://office-a:4567")
+COORDINATION_MODE = ENV.fetch("COORDINATION_MODE", "authority")
+
+unless %w[authority local].include?(COORDINATION_MODE)
+  abort "COORDINATION_MODE must be authority or local"
+end
 
 before do
   content_type :json
@@ -64,20 +70,25 @@ get "/health" do
 end
 
 get "/seat" do
-  forward_to_authority if OFFICE == "b"
+  if COORDINATION_MODE == "authority" && OFFICE == "b"
+    forward_to_authority
+  end
 
-  customer = BOOKING_LOCK.synchronize { BOOKING[:customer] }
+  bookings = BOOKING_LOCK.synchronize { BOOKINGS.values.map(&:dup) }
 
   {
     seat: "A1",
-    available: customer.nil?,
-    customer: customer
+    available: bookings.empty?,
+    conflict: bookings.length > 1,
+    bookings: bookings
   }.to_json
 end
 
 post "/book" do
-  forward_to_authority if OFFICE == "b"
-  
+  if COORDINATION_MODE == "authority" && OFFICE == "b"
+    forward_to_authority
+  end
+
   begin
     payload = JSON.parse(request.body.read)
   rescue JSON::ParserError
@@ -91,13 +102,67 @@ post "/book" do
   end
 
   BOOKING_LOCK.synchronize do
-    if BOOKING[:customer]
+    if BOOKINGS.any?
       status 409
-      { error: "Seat already booked", customer: BOOKING[:customer] }.to_json
+
+      {
+        error: "Seat already booked",
+        bookings: BOOKINGS.values
+      }.to_json
     else
-      BOOKING[:customer] = customer
+      booking = {
+        id: SecureRandom.uuid,
+        seat: "A1",
+        customer: customer,
+        office: OFFICE
+      }
+
+      BOOKINGS[booking[:id]] = booking
+
       status 201
-      { seat: "A1", customer: customer, confirmed: true }.to_json
+      { confirmed: true, booking: booking }.to_json
     end
+  end
+end
+
+post "/replicate" do
+  unless COORDINATION_MODE == "local"
+    halt 409, { error: "Replication requires local mode" }.to_json
+  end
+
+  begin
+    records = JSON.parse(request.body.read, symbolize_names: true)
+  rescue JSON::ParserError
+    halt 400, { error: "Send valid JSON" }.to_json
+  end
+
+  valid = records.is_a?(Array) && records.all? do |record|
+    record.is_a?(Hash) &&
+      record[:id].is_a?(String) && !record[:id].empty? &&
+      record[:seat] == "A1" &&
+      record[:customer].is_a?(String) &&
+      !record[:customer].strip.empty? &&
+      %w[a b].include?(record[:office])
+  end
+
+  unless valid
+    halt 400, { error: "Send an array of valid booking records" }.to_json
+  end
+
+  BOOKING_LOCK.synchronize do
+    records.each do |record|
+      BOOKINGS[record[:id]] ||= {
+        id: record[:id],
+        seat: record[:seat],
+        customer: record[:customer],
+        office: record[:office]
+      }
+    end
+
+    {
+      office: OFFICE,
+      booking_count: BOOKINGS.length,
+      conflict: BOOKINGS.length > 1
+    }.to_json
   end
 end
