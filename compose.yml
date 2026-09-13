@@ -1,5 +1,10 @@
 services:
-  office:
+  office-a:
     build: .
     ports:
-      - "4567:4567"
+      - "127.0.0.1:4567:4567"
+
+  office-b:
+    build: .
+    ports:
+      - "127.0.0.1:4568:4567"
