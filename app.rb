@@ -20,6 +20,10 @@ BOOKING_LOCK = Mutex.new
 OFFICE = ENV.fetch("OFFICE", "a")
 AUTHORITY_URL = ENV.fetch("AUTHORITY_URL", "http://office-a:4567")
 COORDINATION_MODE = ENV.fetch("COORDINATION_MODE", "authority")
+PEER_URL = ENV.fetch(
+  "PEER_URL",
+  OFFICE == "a" ? "http://office-b:4567" : "http://office-a:4567"
+)
 
 unless %w[authority local].include?(COORDINATION_MODE)
   abort "COORDINATION_MODE must be authority or local"
@@ -164,5 +168,43 @@ post "/replicate" do
       booking_count: BOOKINGS.length,
       conflict: BOOKINGS.length > 1
     }.to_json
+  end
+end
+
+if COORDINATION_MODE == "local"
+  Thread.new do
+    loop do
+      sleep 2
+
+      # Capture state quickly, then release the mutex.
+      records = BOOKING_LOCK.synchronize do
+        BOOKINGS.values.map(&:dup)
+      end
+
+      begin
+        uri = URI("#{PEER_URL}/replicate")
+        request = Net::HTTP::Post.new(uri)
+        request["Content-Type"] = "application/json"
+        request.body = JSON.generate(records)
+
+        response = Net::HTTP.start(
+          uri.host,
+          uri.port,
+          nil,
+          open_timeout: 1,
+          read_timeout: 2
+        ) do |http|
+          http.request(request)
+        end
+
+        if response.code == "200"
+          puts "[replication] #{OFFICE} sent #{records.length} records"
+        else
+          warn "[replication] #{OFFICE}: peer returned #{response.code}"
+        end
+      rescue Timeout::Error, SocketError, SystemCallError, EOFError => error
+        warn "[replication] #{OFFICE}: #{error.class}: #{error.message}"
+      end
+    end
   end
 end
