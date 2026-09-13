@@ -1,15 +1,31 @@
 services:
   office-a:
     build: .
-    ports:
-      - "127.0.0.1:4567:4567"
     environment:
       OFFICE: a
+    ports:
+      - "127.0.0.1:4567:4567"
+    networks:
+      access-a:
+         gw_priority: 1
+      coordination:
+          gw_priority: 0
 
   office-b:
     build: .
-    ports:
-      - "127.0.0.1:4568:4567"
     environment:
       OFFICE: b
       AUTHORITY_URL: http://office-a:4567
+    ports:
+      - "127.0.0.1:4568:4567"
+    networks:
+      access-b:
+        gw_priority: 1
+      coordination:
+        gw_priority: 0
+
+networks:
+  access-a:
+  access-b:
+  coordination:
+    name: cap-kub-lab-coordination
