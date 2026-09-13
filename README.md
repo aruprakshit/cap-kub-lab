@@ -14,7 +14,7 @@ You will observe:
 
 The runnable lessons use verified historical commits in a separate worktree. Tutorial host ports are **14567/14568**, distinct from the original lab's 4567/4568. Each lesson explains its starting state, commands, order, expected results, and recovery. Read the setup before executing commands from later lessons.
 
-Current application source: `e4b07a5`. It has local/authority modes, in-memory booking records, a duplicate-safe receiver, and periodic replication. There is no durable storage or automatic business conflict resolution. Kubernetes deployment is a future learning, not part of the completed tutorial.
+Current application source: `e4b07a5`. It has local/authority modes, in-memory booking records, a duplicate-safe receiver, and periodic replication. There is no durable storage or automatic business conflict resolution. The Kubernetes continuation now covers [k3d, the first Deployment, and Pod replacement](notes/17-k3d-deployment-and-recovery.md), with an optional [Headlamp dashboard](notes/16-headlamp-dashboard.md). These steps were verified by the learner at commit 271f190; they were not part of the earlier automated Docker tutorial validation.
 
 ## Project files
 

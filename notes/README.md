@@ -45,3 +45,7 @@ e4b07a5f1c25fb4999cbfc2532656807c2bfd59a  background sender
 When adding a new learning: implement, observe the checks, explicitly mark the source commit checkpoint, let the learner commit, then record the verified hash in the note. Do not claim a test was run merely because a command is documented.
 
 For documentation-only improvements, a documentation commit is appropriate; no new application commit is required. README.md and the notes are tracked and shared on GitHub. Stage and commit documentation edits normally; check that any newly created notes are included in the staged changes.
+
+## Kubernetes continuation
+
+The Kubernetes sequence starts with [17 — k3d, Deployment, and Pod replacement](17-k3d-deployment-and-recovery.md). Install the optional [16 — Headlamp dashboard](16-headlamp-dashboard.md) after creating the cluster. File numbers reflect when the notes were added; cluster setup must precede dashboard installation. Both reference source commit 271f190.

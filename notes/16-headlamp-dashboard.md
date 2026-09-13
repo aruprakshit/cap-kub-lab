@@ -4,7 +4,7 @@
 
 Headlamp provides a browser UI for inspecting Pods, Deployments, events, and logs. It does not require moving the application to GitOps or Argo CD. Its login permissions come from Kubernetes RBAC.
 
-This guide records the installation steps provided during the Kubernetes lesson. The project contains `k8s/headlamp-install.yaml`, but successful installation and browser login have not yet been reported. These are instructions and expected results, not a claim of completed verification. The Kubernetes files are not yet committed; record their source commit after the checks succeed.
+Installation checkpoint: `271f190295684537f36f0c779c972d7ae14c773f` (`271f190`). The learner confirmed Headlamp was up and running in the browser. The installation manifest and this guide were committed with the first office Deployment. Browser verification is learner-confirmed; no screenshot or token was recorded. For cluster creation and the office Deployment, begin with [lesson 17](17-k3d-deployment-and-recovery.md).
 
 ## Prerequisites and terminal location
 
@@ -179,8 +179,8 @@ kubectl --context=k3d-cap-kub-lab -n kube-system \
 
 ## Completion and commit checkpoint
 
-The setup is verified when the Headlamp Pod is Ready, browser login succeeds, and the UI displays office-a's Deployment/Pod consistently with kubectl. Report errors without including the token.
+The setup is verified when the Headlamp Pod is Ready, browser login succeeds, and the UI displays office-a's Deployment/Pod consistently with kubectl. The learner has confirmed successful setup. For replay, report errors without including the token.
 
-After those checks, commit the intended installation manifest and this note. Do not claim a successful browser check before it has been done. Read-only viewer identity/binding commands are recorded here; they are not contained in the upstream install manifest and must also be run on a fresh cluster.
+The original successful setup was committed in 271f190. For future changes, commit the intended manifest and updated note after verifying them. Do not claim a successful browser check before it has been done. Read-only viewer identity/binding commands are recorded here; they are not contained in the upstream install manifest and must also be run on a fresh cluster.
 
 For a temporary pause, Ctrl+C the port-forward. Headlamp stays installed and no application booking state is changed by closing the browser or ending the tunnel.

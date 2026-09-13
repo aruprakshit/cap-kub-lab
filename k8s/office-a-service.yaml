@@ -1,0 +1,45 @@
+# Services belong to Kubernetes' core v1 API.
+apiVersion: v1
+
+# RESOURCE: this document declares ONE Service.
+kind: Service
+
+# Identity of the Service itself.
+metadata:
+  name: office-a
+  namespace: cap-lab
+
+# Desired configuration of the Service.
+spec:
+  # Allocate a virtual IP reachable inside the cluster.
+  # This does NOT publish a port on your laptop.
+  type: ClusterIP
+
+  # Find Pods in cap-lab carrying this label.
+  #
+  # Connects to office-a.yaml:
+  #   spec.template.metadata.labels.app: office-a
+  #
+  # It matches POD LABELS, not the Deployment's name.
+  selector:
+    app: office-a
+
+  ports:
+    # Name of this Service port.
+    # This name is separate from the container port name below.
+    - name: http
+
+      # Port clients connect to on the Service:
+      #   http://office-a:4567
+      port: 4567
+
+      # Look up the port named "http" in the selected Pod.
+      #
+      # Connects to office-a.yaml:
+      #   containers:
+      #     - ports:
+      #         - name: http
+      #           containerPort: 4567
+      #
+      # Therefore, traffic goes to the Pod's port 4567.
+      targetPort: http

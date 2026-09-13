@@ -1,36 +1,66 @@
+# Which Kubernetes API understands this resource?
 apiVersion: apps/v1
+
+# RESOURCE: this entire document declares ONE Deployment.
 kind: Deployment
+
+# Identity of the Deployment.
 metadata:
   name: office-a
   namespace: cap-lab
+
+# Desired behavior of the Deployment.
 spec:
+  # Maintain one application Pod.
   replicas: 1
+
+  # Identify the Pods managed by this Deployment.
   selector:
     matchLabels:
       app: office-a
+
+  # POD TEMPLATE: instructions for creating each Pod.
   template:
     metadata:
+      # Labels placed on the created Pods.
+      # These must match the Deployment selector above.
       labels:
         app: office-a
+
+    # Configuration of each created Pod.
     spec:
       containers:
+        # CONTAINER: one container inside each Pod.
         - name: office
           image: cap-kub-office:v1
+
+          # Use the image already imported into the node.
           imagePullPolicy: Never
+
+          # Describe the container's listening port.
+          # This does NOT create a Service or publish a host port.
           ports:
             - name: http
               containerPort: 4567
+
+          # Environment variables for the Ruby process.
           env:
             - name: OFFICE
               value: a
             - name: COORDINATION_MODE
               value: authority
+
+          # Readiness configuration for this container.
+          # This is NOT a separate Kubernetes resource.
           readinessProbe:
             httpGet:
               path: /health
               port: http
+
+              # Use a hostname permitted by Sinatra.
               httpHeaders:
                 - name: Host
                   value: localhost
+
             initialDelaySeconds: 2
             periodSeconds: 2
