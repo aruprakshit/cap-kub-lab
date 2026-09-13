@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office-a
+  namespace: cap-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: office-a
+  template:
+    metadata:
+      labels:
+        app: office-a
+    spec:
+      containers:
+        - name: office
+          image: cap-kub-office:v1
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 4567
+          env:
+            - name: OFFICE
+              value: a
+            - name: COORDINATION_MODE
+              value: authority
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 2
+            periodSeconds: 2
