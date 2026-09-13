@@ -3,8 +3,13 @@ services:
     build: .
     ports:
       - "127.0.0.1:4567:4567"
+    environment:
+      OFFICE: a
 
   office-b:
     build: .
     ports:
       - "127.0.0.1:4568:4567"
+    environment:
+      OFFICE: b
+      AUTHORITY_URL: http://office-a:4567
