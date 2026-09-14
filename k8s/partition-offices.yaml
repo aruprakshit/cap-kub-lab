@@ -1,0 +1,41 @@
+# NetworkPolicy controls permitted network traffic for selected Pods.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+
+metadata:
+  name: partition-offices
+  # The policy selects office Pods within this namespace.
+  namespace: cap-lab
+
+spec:
+  # Select the DESTINATION Pods whose incoming traffic we restrict.
+  # These app labels already exist on our Deployment Pod templates.
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - office-a
+          - office-b
+
+  # Ingress means incoming connections to the selected office Pods.
+  # This policy does not restrict outgoing traffic.
+  policyTypes:
+    - Ingress
+
+  # Once selected by an ingress policy, these Pods accept only
+  # traffic allowed by applicable policies, plus Kubernetes exceptions.
+  ingress:
+    - from:
+        # Allow connections originating from our labelled client Pod.
+        # A podSelector without namespaceSelector matches Pods
+        # in the SAME namespace as this NetworkPolicy: cap-lab.
+        - podSelector:
+            matchLabels:
+              role: client
+
+      # The allowed client can reach the Ruby server on TCP port 4567.
+      # This is the destination Pod's port, not a host-published port.
+      ports:
+        - protocol: TCP
+          port: 4567
