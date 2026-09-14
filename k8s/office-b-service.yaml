@@ -1,0 +1,22 @@
+apiVersion: v1
+
+# RESOURCE: stable in-cluster entry point for B.
+kind: Service
+metadata:
+  name: office-b
+  namespace: cap-lab
+
+spec:
+  type: ClusterIP
+
+  # Matches office B's Pod-template labels.
+  selector:
+    app: office-b
+
+  ports:
+    - name: http
+      # Clients connect to office-b:4567.
+      port: 4567
+
+      # Resolves to B's container port named "http".
+      targetPort: http

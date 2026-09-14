@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+
+# RESOURCE: maintain the desired office B Pods.
+kind: Deployment
+metadata:
+  name: office-b
+  namespace: cap-lab
+
+spec:
+  replicas: 1
+
+  # Identify Pods managed by this Deployment.
+  selector:
+    matchLabels:
+      app: office-b
+
+  # Blueprint for each office B Pod.
+  template:
+    metadata:
+      labels:
+        app: office-b
+
+    spec:
+      containers:
+        - name: office
+          # Same application image used by A.
+          image: cap-kub-office:v1
+          imagePullPolicy: Never
+
+          ports:
+            - name: http
+              containerPort: 4567
+
+          env:
+            # Identify this process as office B.
+            - name: OFFICE
+              value: b
+
+            # B must consult A for reads and bookings.
+            - name: COORDINATION_MODE
+              value: authority
+
+            # Resolves to A's Service in the same namespace.
+            # Do not use A's replaceable Pod IP.
+            - name: AUTHORITY_URL
+              value: http://office-a:4567
+
+          # Check B's local health endpoint.
+          # This does not test whether B can reach A.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 2
+            periodSeconds: 2
