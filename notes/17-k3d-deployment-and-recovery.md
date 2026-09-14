@@ -1,5 +1,9 @@
 # 17 — Run an office in Kubernetes and observe Pod replacement
 
+A Deployment replaces a deleted Pod. It restores a running office, but it does not restore the booking that lived in the old process’s memory.
+
+[All lessons](README.md)
+
 ## Checkpoint and reading order
 
 Source commit: `271f190295684537f36f0c779c972d7ae14c773f` (`271f190`) — Deploy ticket office and Headlamp to the local Kubernetes lab.
@@ -174,3 +178,7 @@ Kubernetes restored the requested running process count. It did not restore Ruby
 After these checks, the learner committed 271f190, containing office-a.yaml, headlamp-install.yaml, and the initial Headlamp note. This note and the Headlamp verification update follow that source commit. No new app code is needed to repeat the experiment.
 
 End state: replacement office Pod ready, empty bookings, Deployment still present. Closing port-forward does not stop it. Leave the cluster intact for the next lesson: a Service gives the office stable in-cluster discovery, but does not make its memory persistent.
+
+---
+
+Next: [18 — A stable Service can follow replacement Pods](18-service-discovery.md).

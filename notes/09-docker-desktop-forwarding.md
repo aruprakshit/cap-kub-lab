@@ -1,5 +1,9 @@
 # 09 — Diagnose the host-port path, not the Ruby application
 
+A failed host port does not necessarily mean the app is down. This optional investigation separates Docker Desktop forwarding from the container network path.
+
+[All lessons](README.md)
+
 **Start:** after lesson 08, both tutorial offices are connected. This lesson is OPTIONAL and environment-specific. Do not assume your Docker version must reproduce the same error. A working host port after disconnection is a valid result on another setup.
 
 The historical record below uses the original project, ports 4567/4568, and run-specific IP addresses. Do not paste those old network names into the isolated tutorial. Use this replay section instead.
@@ -60,6 +64,9 @@ Read timestamps and match the CURRENT B container ID. Last 40 means enumeration 
 Publishing is a forwarding path, not just a number printed by inspect. Default-gateway choice and Desktop's published-port destination are distinct. Gateway priority did not repair the original problem. The client container isolates the application-level CAP experiment from this host-forwarding behavior.
 
 **End state:** coordination reconnected. Continue to [lesson 10](10-booking-records-and-modes.md). The remaining section is evidence from the original investigation, not another required sequence to execute.
+
+<details>
+<summary>Original investigation, logs, and attempted fixes</summary>
 
 ## Historical investigation (original lab names and ports)
 
@@ -235,3 +242,5 @@ We have evidence of the unusable forwarding destination. We have not established
 A suggested alternative is a proxy attached only to access-b, with the host port published on that stable proxy. That is an architectural workaround and has not been implemented or tested here. The completed CAP experiment uses the verified temporary-client path.
 
 Do not generalize this Desktop behavior into a rule that all Docker network disconnections break published ports. This note records one reproducible environment-specific failure and its evidence.
+
+</details>

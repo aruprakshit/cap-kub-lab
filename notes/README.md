@@ -1,63 +1,58 @@
-# CAP homelab — tutorial index
+# Lab notes
 
-Start with [00 — setup and conventions](00-start-here.md), even if you already have the original lab running. The tutorial uses its own worktree, Docker project, ports, and networks. Complete commands in order; later code cannot reproduce all earlier behavior.
+There are two ways to use these notes. Read the opening paragraph of each lesson to follow the idea, or work through the steps to see it happen locally. Longer historical output is tucked into expandable sections where it would otherwise interrupt the experiment.
 
-| Lesson | Source checkpoint | What it adds | Expected end state |
-| --- | --- | --- | --- |
-| [01 Containers and dependencies](01-container-setup.md) | b5086f1 | Understand the build inputs | Tools and config checked |
-| [02 One office](02-one-office.md) | b5086f1 | Book, reject, restart | One empty running office |
-| [03 Mutex and snapshots](03-mutex-and-snapshots.md) | b5086f1 | Understand process-local coordination | No state change |
-| [04 Independent offices](04-two-offices.md) | 0aedb7a | Separate memory causes double booking | Alice at A, Bob at B |
-| [05 Command reference](05-docker-commands.md) | Reference | Explain lifecycle and original commands | No required action |
-| [06 Fixed authority](06-authoritative-office.md) | 981fa2e | B forwards reads/writes to A | Alice at A; B relays it |
-| [07 Authority outage](07-authority-outage.md) | 981fa2e | B alive, operations unavailable | A restarted, empty |
-| [08 Network partition](08-network-partition.md) | 47c24dd | Both alive, B refuses while isolated | Reconnected, Alice retained |
-| [09 Desktop forwarding](09-docker-desktop-forwarding.md) | 47c24dd | Diagnose an independent host path failure | Reconnected; optional investigation |
-| [10 Modes and record IDs](10-booking-records-and-modes.md) | b2425cb + authority override | Preserve existing behavior with records | Alice record via authority |
-| [11 Manual delivery](11-manual-replication.md) | b2425cb + local mode | Duplicate-safe receiver | One Alice record at both |
-| [12 Automatic delivery](12-automatic-replication.md) | e4b07a5 + local mode | Background exchange | One converged Alice record |
-| [13 Conflict after partition](13-partition-conflict.md) | e4b07a5 + local mode | Independent confirmations, then convergence | Two conflicting records at both |
-| [14 Troubleshooting/glossary](14-troubleshooting.md) | Reference | Recover and explain | No required action |
+For a first run, begin with [setup](00-start-here.md). Keep the preparation and recovery steps: they establish the state the next experiment depends on.
 
-## Why use history instead of running the latest code throughout?
+## Start with Docker
 
-The latest app automatically replicates. The early app does not. Running the latest code during the independent-office or manual-delivery lessons would change the outcome before you understood why. Each lesson therefore names a verified commit and stops the previous stack before switching.
+1. [Set up the replay worktree](00-start-here.md)
+2. [Put Ruby and its dependencies in a container](01-container-setup.md)
+3. [Book one seat at one office](02-one-office.md)
+4. [Understand what the mutex protects](03-mutex-and-snapshots.md)
+5. [Watch two independent offices double-book](04-two-offices.md)
+6. [Make A the booking authority](06-authoritative-office.md)
+7. [Stop A and check what B can still do](07-authority-outage.md)
+8. [Break communication without stopping the offices](08-network-partition.md)
+9. [Give bookings IDs and introduce modes](10-booking-records-and-modes.md)
+10. [Deliver a record manually, twice](11-manual-replication.md)
+11. [Let replication run in the background](12-automatic-replication.md)
+12. [Reconnect offices that made conflicting promises](13-partition-conflict.md)
 
-This is a runnable reconstruction of the learning journey, not a collection of unfinished snippets. Complete source already exists at every checkpoint. `git diff` commands connect the implementation changes to each experiment. Application development remains manual; sourcing tutorial helpers only defines command wrappers.
+## Repeat it in Kubernetes
 
-## Evidence policy
+Use the original checkout for this part. The Kubernetes setup explains how to create the cluster and import the image; the Docker replay worktree is for the earlier experiments.
 
-Each lesson distinguishes original pasted output, learner-confirmed outcomes without pasted output, and expected replay behavior. New isolated validation is recorded separately in [the validation report](15-validation.md). UUIDs and IPs in historical examples are examples, not constants to hard-code.
+1. [Run an office and replace its Pod](17-k3d-deployment-and-recovery.md)
+2. [Keep a stable address with a Service](18-service-discovery.md)
+3. [Connect B to A through Services](19-two-offices-in-kubernetes.md)
+4. [Block coordination with NetworkPolicy](20-kubernetes-network-partition.md)
+5. [Enable local decisions and replication](21-kubernetes-local-replication.md)
+6. [Observe a conflict after recovery](22-kubernetes-partition-conflict.md)
+7. [Build a reusable client command](23-declarative-client-utility.md)
 
-Historical source commits:
+## Look these up when needed
 
-```text
-b5086f18e7090530f3cc1b267a0f0affe8abf22c  single office
-0aedb7af54394d9f1dc29ca5dad76b5016ffff02  independent offices
-981fa2e9a320f2975124ad865355d3c514ca5988  fixed authority
-47c24dd06f21ff9724014de7bf7b0522fea36f3f  separate networks
-b2425cbdd6a67f42f10e3384977ab96194ba68fa  modes and receiver
-e4b07a5f1c25fb4999cbfc2532656807c2bfd59a  background sender
-```
+- [Docker commands and original build history](05-docker-commands.md)
+- [The Docker Desktop forwarding investigation](09-docker-desktop-forwarding.md)
+- [Troubleshooting and glossary](14-troubleshooting.md)
+- [Docker replay validation results](15-validation.md)
+- [Optional dashboard setup](16-headlamp-dashboard.md) — after creating the cluster
 
-## Maintaining these notes
+<details>
+<summary>Why the lessons name different Git commits</summary>
 
-When adding a new learning: implement, observe the checks, explicitly mark the source commit checkpoint, let the learner commit, then record the verified hash in the note. Do not claim a test was run merely because a command is documented.
+The app changes as the experiments progress. Early offices do not replicate; later ones do. Each lesson names the source version that produces its intended behavior, so use its checkpoint rather than the latest code throughout. File numbers also reflect when notes were added; follow the order above.
 
-For documentation-only improvements, a documentation commit is appropriate; no new application commit is required. README.md and the notes are tracked and shared on GitHub. Stage and commit documentation edits normally; check that any newly created notes are included in the staged changes.
+Each lesson distinguishes supplied results from expected replay behavior. The validation report records the separate Docker replay checks. Example UUIDs and IP addresses are observations, not values to hard-code.
 
-## Kubernetes continuation
+</details>
 
-The Kubernetes sequence starts with [17 — k3d, Deployment, and Pod replacement](17-k3d-deployment-and-recovery.md). Install the optional [16 — Headlamp dashboard](16-headlamp-dashboard.md) after creating the cluster. File numbers reflect when the notes were added; cluster setup must precede dashboard installation. Both reference source commit 271f190.
+<details>
+<summary>Adding a new lesson</summary>
 
-Continue with [18 — stable Service discovery across Pod replacement](18-service-discovery.md), source commit 1005f16. This covers only the Ruby application resources.
+Implement a small change, run its checks, commit the implementation, then write the note against that hash. Record only the results actually observed; keep unrun checks labelled as expectations. Replaying an existing checkpoint does not require a new implementation commit.
 
-[19 — two offices with Service-based forwarding](19-two-offices-in-kubernetes.md) records the successful authority-mode experiment at c49c141 and includes the reusable in-cluster client helper.
+Keep the main point near the top. Leave required setup, commands, expected outcomes, and recovery visible. Use expandable sections for lengthy transcripts and optional background. Commit documentation after review, and make sure new notes appear in the staged changes.
 
-[20 — authority-mode partition with NetworkPolicy](20-kubernetes-network-partition.md) records the partition and recovery at e267954, including client labels, policy selectors, observed failures, and restoration checks.
-
-[21 — local booking and asynchronous replication](21-kubernetes-local-replication.md) records the connected replication baseline at 6a86317, including the mode transition, rollout order, and verified booking results.
-
-[22 — local bookings during partition and conflict after recovery](22-kubernetes-partition-conflict.md) reuses 6a86317 and records independent confirmations, convergence, and the distinction between shared records and a resolved business conflict.
-
-[23 — declarative client and OptionParser utility](23-declarative-client-utility.md) documents checkpoint 59d4eee: a plain Ruby client Deployment, Kustomize-generated ConfigMap, volume mount, and tracked terminal launcher.
+</details>

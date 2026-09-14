@@ -1,5 +1,9 @@
 # 23 — A declarative client with an OptionParser utility
 
+Keep the request code in a Ruby file and run it inside a declared client Pod. Kustomize packages the file, the ConfigMap mounts it, and ./bin/ask saves the typing.
+
+[All lessons](README.md)
+
 ## Checkpoint and purpose
 
 Source: `59d4eeec3637caadd7f09926567a987adc913c47` (`59d4eee`) — Add declarative Kubernetes client with OptionParser utility.
@@ -27,6 +31,9 @@ WSL: ./bin/ask -o a -p /seat
 
 The request originates inside the cluster. This exercises Service discovery and the normal client network path used in our NetworkPolicy experiment. Ruby is available in the client image, so no host Ruby installation is needed. The launcher is a tracked file, not a shell function that every reader must recreate.
 
+<details>
+<summary>2. Inspect the source and options</summary>
+
 ## 2. Inspect the source and options
 
 ```bash
@@ -49,6 +56,8 @@ The utility does not enforce every endpoint/method combination or the applicatio
 A successful utility exit does not prove a successful booking. Read the printed HTTP code. Kubectl itself can also fail before Ruby starts; its error is a separate layer.
 
 The request has connection, read, and write timeouts of 2, 10, and 5 seconds, respectively. These are not one overall end-to-end deadline. Automatic Net::HTTP retries are disabled to keep the experiment to one request attempt. A transport failure does not prove a POST was never processed.
+
+</details>
 
 ## 3. Generate the ConfigMap declaratively
 
@@ -111,6 +120,9 @@ Expect one ready client Pod with app=service-client and role=client. The app lab
 
 No client Service is needed: this container initiates HTTP requests rather than listening for them. Kubectl exec reaches the container through Kubernetes administration APIs.
 
+<details>
+<summary>5. Connect the mount names</summary>
+
 ## 5. Connect the mount names
 
 In the Pod specification:
@@ -136,6 +148,8 @@ The shared name client-tools connects the mount to the Pod volume. The ConfigMap
 /tools is an arbitrary descriptive directory inside the container, not a special Kubernetes directory or a WSL folder. Kubernetes makes the mount available there; no Dockerfile mkdir is required. Changing it to /client would require the launcher to use /client/ask.rb. A dedicated directory avoids hiding existing image files under the mount.
 
 This is a read-only volume containing an uploaded copy of the script, not a live connection to the WSL source directory. We mount the whole directory rather than using subPath.
+
+</details>
 
 ## 6. Verify the utility
 

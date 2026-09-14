@@ -1,5 +1,9 @@
 # Start here — a guided CAP homelab
 
+Start here once. Set up a separate Docker replay worktree so each experiment runs the right version of the app without disturbing your original checkout.
+
+[All lessons](README.md)
+
 ## What you will build and understand
 
 One ticket office becomes two. First they double-book a seat. Then they share an authority and lose availability when that authority cannot be reached. Finally they accept local bookings and exchange records, converging on a conflict after a partition.
@@ -138,3 +142,7 @@ cd "$TUTORIAL_SOURCE"
 The worktree can remain for future replay. Do not use broad Docker prune commands. The tutorial helper targets only project `cap-kub-tutorial`; your separate `cap-kub-lab` project is not stopped by it.
 
 Continue to [lesson 01](01-container-setup.md).
+
+---
+
+Next: [01 — A Ruby application without installing Ruby on Ubuntu](01-container-setup.md).

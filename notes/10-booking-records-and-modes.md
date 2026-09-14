@@ -1,5 +1,9 @@
 # 10 — Select a strategy and preserve booking identities
 
+Give each booking an ID before exchanging records. First check that the new representation still behaves correctly in authority mode.
+
+[All lessons](README.md)
+
 **Source:** `b2425cbdd6a67f42f10e3384977ab96194ba68fa` — Add local booking mode and idempotent replication receiver.
 
 This commit bundles the record representation and receiver. The committed mode is local; this lesson intentionally overrides it to authority to check that the representation change preserves the earlier behavior.
@@ -68,3 +72,7 @@ Original observed read (your UUID differs):
 All original responses were pasted and matched those checks. The new array is preparation for conflicts, not evidence of replication yet.
 
 **End state:** authority mode, one record at A. [Lesson 11](11-manual-replication.md) explicitly resets state and selects local mode. Do not merely export local without recreating containers: running process environments would remain unchanged.
+
+---
+
+Next: [11 — Deliver records manually and safely repeat delivery](11-manual-replication.md).

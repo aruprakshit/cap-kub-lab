@@ -1,5 +1,9 @@
 # 01 — A Ruby application without installing Ruby on Ubuntu
 
+Ruby and its gems live in the container. Your machine only needs the tools to build and run it; the committed lockfile keeps dependency versions consistent.
+
+[All lessons](README.md)
+
 **Start:** complete [start here](00-start-here.md). Run from the tutorial worktree in Bash. This lesson explains the build inputs; lesson 02 starts the server.
 
 ## Predict
@@ -43,6 +47,9 @@ CMD ["bundle", "exec", "ruby", "app.rb"]
 
 `frozen` requires Gemfile and lockfile to agree. `bundle exec` uses the selected bundle. Dependencies are copied before app.rb so code-only edits can reuse the installed-gem layer. COPY is not a live mount: restart alone does not incorporate later source edits.
 
+<details>
+<summary>3. Understand the lockfile (do not regenerate on normal replay)</summary>
+
 ## 3. Understand the lockfile (do not regenerate on normal replay)
 
 ```bash
@@ -78,6 +85,8 @@ This is an explanation of project creation, not a required step when replaying t
 
 `$(id -u)` and `$PWD` are expanded by Ubuntu before Docker runs. The runtime installs the gems later during image build.
 
+</details>
+
 ## 4. Check port publishing before startup
 
 ```bash
@@ -89,3 +98,7 @@ The historical compose.yml publishes `4567:4567`, on all host interfaces by defa
 Ruby listens on `0.0.0.0:4567` INSIDE the container so forwarded traffic can reach it. Docker publishes host port 14567 through the overlay. EXPOSE alone does not publish a port.
 
 **Checkpoint:** source at b5086f1, Docker reachable, effective config contains only the tutorial host port. No server is required yet. Next: [one office](02-one-office.md).
+
+---
+
+Next: [02 — One office accepts one booking](02-one-office.md).

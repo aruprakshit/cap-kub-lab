@@ -1,5 +1,9 @@
 # 11 — Deliver records manually and safely repeat delivery
 
+Send Alice’s record to B yourself, then send the identical record again. B should retain one record and use it to reject Bob.
+
+[All lessons](README.md)
+
 **Source:** `b2425cbdd6a67f42f10e3384977ab96194ba68fa` (same source as lesson 10). Now select LOCAL mode. Automatic sending does not exist yet.
 
 **Prediction:** Alice is known only to A until delivered; identical repeated delivery adds one record at B, not two; B then rejects Bob.
@@ -91,3 +95,7 @@ Why does replication not reject a record when occupied? It records a confirmatio
 The learner confirmed all predicted outcomes; raw output was not pasted for that original run. This does not yet establish eventual convergence because automatic exchange is absent. The later validation report separately states which tutorial checks were executed.
 
 **End state:** both have Alice. Source checkpoint was committed as b2425cb only after successful checks. [Lesson 12](12-automatic-replication.md) changes the sender implementation and starts fresh.
+
+---
+
+Next: [12 — Replicate automatically without blocking local requests](12-automatic-replication.md).

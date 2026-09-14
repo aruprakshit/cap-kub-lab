@@ -1,5 +1,9 @@
 # 07 — Process health is not operation availability
 
+B can answer its health check while booking operations fail. A running process is not the same thing as an available booking service.
+
+[All lessons](README.md)
+
 **Source:** `981fa2e` (same as lesson 06). **No code change.**
 
 **Start:** finish [lesson 06](06-authoritative-office.md) with both offices running and Alice booked at A. If joining here, run that lesson first; do not assume an old container has the correct code or state.
@@ -39,9 +43,14 @@ Require 503 from both, with the original implementation's body:
 
 All three outputs were pasted in the original experiment. An HTTP error response is not successful completion of the requested booking/read. B does not fall back to its empty local state.
 
+<details>
+<summary>Understand the error message's limitation</summary>
+
 ## Understand the error message's limitation
 
 The shared detail is overly broad for GET: a read does not create a booking. For POST in general, a lost response can leave the caller uncertain whether A accepted a booking. Here we deliberately stopped A first, so Bob's request could not be processed by it. We preserve this known wording flaw in the historical source, rather than silently claiming it was fixed.
+
+</details>
 
 ## Recover and check what recovery does NOT preserve
 
@@ -54,3 +63,7 @@ curl -i http://127.0.0.1:14568/seat
 Expect an empty seat. A starts a new process, so Alice's in-memory booking is gone. This explicit recovery check is tutorial replay guidance; the original outage transcript ended with A stopped.
 
 **Conclusion:** we tested an authority outage, not a partition between running offices. Next, [lesson 08](08-network-partition.md) changes the network configuration and isolates communication without stopping processes.
+
+---
+
+Next: [08 — Isolate B while both offices remain running](08-network-partition.md).

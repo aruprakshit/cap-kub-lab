@@ -1,5 +1,9 @@
 # 20 — Partition the offices with Kubernetes NetworkPolicy
 
+Keep client access open while NetworkPolicy blocks office-to-office traffic. B stays ready but cannot complete authority-dependent operations.
+
+[All lessons](README.md)
+
 ## Checkpoint and purpose
 
 Source checkpoint: `e267954e5eb6dc1ff694e4446444fde43692624a` (`e267954`) — Demonstrate authority-mode partition behavior with NetworkPolicy.
@@ -54,6 +58,9 @@ kubectl --context=k3d-cap-kub-lab -n cap-lab \
 
 The client must carry role=client BEFORE the policy is applied. Otherwise the policy also blocks our test requests. Labelling an existing Pod does not restart it. If you later recreate service-client, apply the label again: this label was added to that particular Pod.
 
+<details>
+<summary>3. Understand the manifest</summary>
+
 ## 3. Understand the manifest
 
 ```bash
@@ -100,6 +107,8 @@ spec:
 The policy allows client-to-A and client-to-B. B has no role=client label, so B-to-A fails at A's incoming boundary. Outgoing traffic is not isolated by this policy; that does not override restrictions at the destination. Services still select their office Pods, but a Service does not bypass Pod network policy. DNS is not blocked by this ingress-only rule.
 
 This rule is broader than blocking just one pair: other ordinary Pod sources without the client label also lose access to the selected offices. NetworkPolicy has no understanding of HTTP routes, customers, or booking state. The role label is a lab traffic selector, not user authentication.
+
+</details>
 
 ## 4. Apply the partition
 
@@ -152,6 +161,9 @@ Allow a short convergence interval if necessary. Expect B's read to return 200 w
 
 Deleting with -f removes the cluster resource, not the YAML file on disk. Keep that file so the experiment remains reproducible. End with the policy absent and the booking retained. The client label may remain.
 
+<details>
+<summary>Observed learner evidence</summary>
+
 ## Observed learner evidence
 
 The learner supplied these results before committing e267954:
@@ -182,6 +194,8 @@ B's explicit /health output was not supplied; its 200 result remains an expected
 
 These are learner-supplied results, not a separate automated validation run.
 
+</details>
+
 ## If results differ
 
 - Client requests time out for both offices: inspect service-client's role=client label, readiness, and policy selectors first.
@@ -197,3 +211,7 @@ With one authority, the isolated office refused operations instead of inventing 
 The implementation was committed first at e267954. This note was written afterward against that verified checkpoint. Commit documentation separately after review. A later lesson can switch to local decisions and asynchronous replication to compare the other tradeoff using the same network boundary.
 
 References: [Kubernetes NetworkPolicy semantics](https://kubernetes.io/docs/concepts/services-networking/network-policies/) and [K3s networking services](https://docs.k3s.io/networking/networking-services).
+
+---
+
+Next: [21 — Local booking and asynchronous replication in Kubernetes](21-kubernetes-local-replication.md).

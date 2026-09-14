@@ -1,5 +1,9 @@
 # 02 — One office accepts one booking
 
+One office confirms Alice and rejects Bob. Restart it and the seat becomes empty again: the booking was in memory, not durable storage.
+
+[All lessons](README.md)
+
 **Source:** `b5086f18e7090530f3cc1b267a0f0affe8abf22c` — Add containerized Sinatra ticket booking service with Bundler and Docker Compose.
 
 **Question:** can one process enforce one confirmed customer for A1? Predict the first booking succeeds and the next is rejected.
@@ -71,3 +75,7 @@ Expect an empty seat again. Restart starts a new Ruby process; there is no datab
 The original run pasted the initial 200, Alice 201, booked read, and Bob 409. It also showed empty state again without a pasted intervening restart. The explicit reset test above is clarified replay guidance. Sequential requests establish the expected behavior; they are not a concurrent stress test.
 
 **End state:** one running office, empty after step 5. Keep it running while reading [lesson 03](03-mutex-and-snapshots.md). No new source commit is needed to replay an existing checkpoint.
+
+---
+
+Next: [03 — A mutex protects one process](03-mutex-and-snapshots.md).

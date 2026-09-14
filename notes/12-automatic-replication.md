@@ -1,5 +1,9 @@
 # 12 — Replicate automatically without blocking local requests
 
+Let the background sender deliver Alice’s record. Wait until B knows about it before asking B to book Bob; delivery is asynchronous.
+
+[All lessons](README.md)
+
 **Source:** `e4b07a5f1c25fb4999cbfc2532656807c2bfd59a` — Add periodic asynchronous replication between ticket offices.
 
 **Prediction:** Alice booked at A appears at B without manual delivery; repeated cycles retain one record. Only try Bob AFTER B has learned Alice.
@@ -82,3 +86,7 @@ Original pasted response from BOTH offices (UUID changes on replay):
 The learner also confirmed the other predicted checks. The original 201/409 were not pasted in that checkpoint; the final matching reads were.
 
 **End state:** both connected, Alice known everywhere. This does not prove at-most-one booking under all timings. [Lesson 13](13-partition-conflict.md) resets FIRST, then partitions BEFORE booking, so both offices start isolated and empty.
+
+---
+
+Next: [13 — Available decisions, converged records, unresolved conflict](13-partition-conflict.md).

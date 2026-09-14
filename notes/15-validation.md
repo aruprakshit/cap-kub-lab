@@ -1,6 +1,13 @@
 # Tutorial validation report
 
+This is the evidence behind the Docker replay instructions. Read it when you want to know what was tested and what those checks do not establish.
+
+[All lessons](README.md)
+
 This report describes actual isolated replay checks, not a guarantee that every machine or future Docker version behaves identically.
+
+<details>
+<summary>Environment and isolation</summary>
 
 ## Environment and isolation
 
@@ -11,6 +18,8 @@ This report describes actual isolated replay checks, not a guarantee that every 
 - Project `cap-kub-tutorial`, host ports 14567/14568, coordination network `cap-kub-tutorial-coordination`.
 - All six recorded source commits built and their effective Compose configurations were checked for isolated ports/network names.
 - Tutorial containers/networks were removed after validation. Original running container IDs remained present. The replay worktree remains available; the original source checkout was not switched.
+
+</details>
 
 ## Runtime checks that passed
 
@@ -32,6 +41,9 @@ No concurrent stress test, durable storage test, arbitrary failure proof, Window
 
 The validation harness used existing maintainer tooling to drive the same images, helpers, requests, and assertions. Readers do not need that tooling: the executable tutorial requires only Bash, Git, curl, Docker, and Compose. The runnable shell/Markdown checks are reported below once complete.
 
+<details>
+<summary>Documentation checks</summary>
+
 ## Documentation checks
 
 - 74 Bash blocks passed bash -n; Markdown fences are balanced.
@@ -39,3 +51,5 @@ The validation harness used existing maintainer tooling to drive the same images
 - tutorial-shell.sh passed Bash syntax validation.
 - The exact documented printf/curl delivery command ran twice at b2425cb: both returned 200 with booking_count 1.
 - Syntax checks alone are not treated as runtime verification; runtime scenarios are listed above.
+
+</details>

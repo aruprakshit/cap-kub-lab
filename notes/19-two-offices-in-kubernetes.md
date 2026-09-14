@@ -1,5 +1,9 @@
 # 19 — Two Services, one booking authority
 
+Give B its own Deployment and Service, then point it to A’s Service. A booking submitted through B is still decided and recorded by A.
+
+[All lessons](README.md)
+
 ## Checkpoint and prerequisites
 
 Source: `c49c141fd2076e3bca9fb139b75479f9e074fc7d` (`c49c141`) — Deploy office B with Service-based forwarding to office A.
@@ -131,3 +135,7 @@ UUIDs differ on replay, but within one run both paths must return the same recor
 All requested responses were pasted and matched predictions. The source checkpoint was committed as c49c141 after verification; this note follows that commit. Kubernetes supplies discovery and workload management, while the Ruby configuration still determines the consistency strategy.
 
 Leave both offices and service-client running, with Alice at A. No NetworkPolicy has been added in this lesson. Next we will explicitly allow client access while blocking office-to-office traffic and verify actual enforcement rather than assuming that creating a policy guarantees isolation. No additional application commit is needed merely to keep these resources running.
+
+---
+
+Next: [20 — Partition the offices with Kubernetes NetworkPolicy](20-kubernetes-network-partition.md).

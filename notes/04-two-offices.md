@@ -1,5 +1,9 @@
 # 04 — Two correct local decisions can conflict
 
+Two offices can each obey their local booking rule and still sell the same seat twice. Separate containers do not share booking memory or a mutex.
+
+[All lessons](README.md)
+
 **Source:** `0aedb7af54394d9f1dc29ca5dad76b5016ffff02` — Run two independent ticket offices to demonstrate double booking.
 
 **Starting idea:** one process enforced its local booking rule. Predict whether copying the service into another container extends that guarantee across both.
@@ -65,3 +69,7 @@ These exact response bodies and statuses were pasted in the original experiment.
 This is not a partition experiment yet: there is no replication/coordination link to break. Waiting longer will never make the offices agree. Nor does a successful health check imply shared data.
 
 **End state:** two running offices with conflicting local customers. Do not overwrite one record to hide the problem. The next implementation makes A authoritative; lesson 06 starts it from a clean state. [Lesson 05](05-docker-commands.md) is a reference page, not a script to execute top-to-bottom.
+
+---
+
+Next: [06 — Two entry points, one authority](06-authoritative-office.md).

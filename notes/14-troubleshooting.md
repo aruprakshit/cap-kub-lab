@@ -1,5 +1,9 @@
 # Troubleshooting, recovery, and glossary
 
+Start with the symptom you can see. A shell error, an HTTP rejection, a network failure, and a lost booking need different checks.
+
+[All lessons](README.md)
+
 ## First identify which layer failed
 
 | Symptom | Check first | Why |

@@ -1,41 +1,35 @@
 # CAP Kubernetes homelab
 
-A step-by-step distributed-systems tutorial using a Ruby/Sinatra ticket office in Docker. No host Ruby or database installation is needed.
+This project started with a question: could I understand the CAP theorem better by watching it happen on my own machine?
 
-**[Start the tutorial](notes/00-start-here.md)** · **[Lesson index](notes/README.md)** · **[Troubleshooting](notes/14-troubleshooting.md)** · **[Validation](notes/15-validation.md)**
+The example is a small ticket-booking app written in Ruby and Sinatra. There is one seat, A1, and two offices selling it. Alice books at one office. Bob tries the other. As long as the offices can talk, they can share what they know. Things get interesting when that connection breaks.
 
-You will observe:
+The lab starts with Docker Compose. First, each office keeps its own bookings, which makes it possible to sell the seat twice. Then one office becomes the authority, and the other has to ask it before confirming a booking. That prevents independent decisions, but leaves the second office unable to book when it cannot reach the first.
 
-1. One office preventing a second booking.
-2. Two independent offices confirming the same seat.
-3. A fixed authority coordinating decisions but becoming unavailable to an isolated office.
-4. Asynchronous replication retaining conflicting confirmations after recovery.
-5. Why Docker Desktop's host-forwarding path can fail independently of a healthy application.
+Later, both offices make local decisions and exchange records in the background. After a network partition, they eventually agree on the records: Alice and Bob both have a confirmed booking. Replication worked. The seat is still double-booked.
 
-The runnable lessons use verified historical commits in a separate worktree. Tutorial host ports are **14567/14568**, distinct from the original lab's 4567/4568. Each lesson explains its starting state, commands, order, expected results, and recovery. Read the setup before executing commands from later lessons.
+Once that behavior is familiar, the same app moves into k3d. Pods, Deployments, Services, and NetworkPolicy become easier to connect to something concrete: keeping an office running, finding it after a restart, or stopping the offices from talking to each other. Kubernetes doesn't change the booking rules for us.
 
-Current application source: `e4b07a5`. It has local/authority modes, in-memory booking records, a duplicate-safe receiver, and periodic replication. There is no durable storage or automatic business conflict resolution. The Kubernetes continuation now covers [k3d, the first Deployment, and Pod replacement](notes/17-k3d-deployment-and-recovery.md), with an optional [Headlamp dashboard](notes/16-headlamp-dashboard.md). These steps were verified by the learner at commit 271f190; they were not part of the earlier automated Docker tutorial validation.
+## Following along
 
-## Project files
+[Start with the setup](notes/00-start-here.md), then follow the [notes in order](notes/README.md). They include the commands, why we run them, and the results to look for. They also cover the problems encountered along the way, including the Docker Desktop forwarding issue.
 
-| File | Role |
-| --- | --- |
-| app.rb | Booking rules, forwarding, record receiver and sender (depending on checkpoint) |
-| Gemfile / Gemfile.lock | Direct dependencies and resolved versions |
-| Dockerfile | Ruby runtime, Bundler installation, application startup |
-| compose.yml | Offices, environment, ports, networks |
-| notes/ | Complete learning sequence and evidence |
-| notes/tutorial-shell.sh | Explained tutorial command wrappers |
-| notes/fixtures/ | Compose overlays isolating replay ports/networks and mode |
+The early lessons use specific Git commits because the app changes as the experiments progress. Running the latest code for every lesson would skip some of the behavior we're trying to observe. The setup walks through creating a separate worktree for those Docker experiments.
 
-## Sharing the tutorial
+If you're returning to the lab, these are useful places to pick it up:
 
-The README and tutorial notes are tracked in Git and available on GitHub. Clone the repository to get both the application and the documentation, then follow [Start here](notes/00-start-here.md).
+- [Two independent offices](notes/04-two-offices.md)
+- [The first Kubernetes Deployment and Pod replacement](notes/17-k3d-deployment-and-recovery.md)
+- [Blocking communication with NetworkPolicy](notes/20-kubernetes-network-partition.md)
+- [Conflicting bookings after the connection returns](notes/22-kubernetes-partition-conflict.md)
+- [A reusable client command with Ruby and ConfigMaps](notes/23-declarative-client-utility.md)
 
-The Ruby application Kubernetes sequence continues with [Service discovery](notes/18-service-discovery.md), [two offices sharing one authority](notes/19-two-offices-in-kubernetes.md), and [a NetworkPolicy partition and recovery](notes/20-kubernetes-network-partition.md). The partition lesson records learner-verified results at `e267954`.
+## Running it locally
 
-[Local booking and asynchronous replication in Kubernetes](notes/21-kubernetes-local-replication.md) continues the tutorial at source checkpoint `6a86317`, with both offices making local decisions and exchanging records through Services.
+The lab was built in Ubuntu on WSL with Docker Desktop, Docker Compose, Git, Bash, and curl. The Kubernetes lessons also use k3d and kubectl. Ruby and its dependencies run in containers; there's no need to install Ruby or a database on your machine. You'll need internet access for the initial downloads.
 
-[Partitioned local bookings and conflict after recovery](notes/22-kubernetes-partition-conflict.md) demonstrates both offices confirming the same seat and later retaining both records.
+Read the setup before starting containers. The Docker replay uses ports 14567 and 14568 and its own worktree. The Kubernetes lessons return to the original checkout and explain what needs to be running before each experiment.
 
-[Declarative client tooling](notes/23-declarative-client-utility.md) adds the reusable `./bin/ask` command and explains its Deployment, ConfigMap, and Kustomize update workflow at `59d4eee`.
+Bookings live in memory, so restarting an office can lose its records. There is also no code to decide which customer gets the seat after a double booking. Keep those limits in mind when interpreting the results.
+
+The notes separate recorded results from checks a reader should expect when replaying a lesson. The [validation report](notes/15-validation.md) covers the separately tested Docker sequence; Kubernetes results are recorded in their respective lessons. If something behaves differently, start with the [troubleshooting notes](notes/14-troubleshooting.md).

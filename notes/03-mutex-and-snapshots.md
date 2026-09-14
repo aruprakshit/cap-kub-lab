@@ -1,5 +1,9 @@
 # 03 — A mutex protects one process
 
+A mutex coordinates threads inside one Ruby process. Locking a read also matters when the response must describe one coherent state; a second process has its own lock.
+
+[All lessons](README.md)
+
 Start after [lesson 02](02-one-office.md), at `b5086f1`, with its tutorial stack unchanged. This is a code-reading lesson, not an additional executed concurrency experiment. Run `cat app.rb` in the tutorial worktree to connect these explanations with the complete implementation. No reset or new source commit is needed here.
 
 ## Why lock POST?
@@ -62,3 +66,7 @@ Office B process: BOOKING B + mutex B
 The rule is not that every GET needs a lock. Shared mutable state needs appropriate coordination when a consistent view matters.
 
 Next: [two independent offices](04-two-offices.md).
+
+---
+
+Next: [04 — Two correct local decisions can conflict](04-two-offices.md).

@@ -1,5 +1,9 @@
 # 21 — Local booking and asynchronous replication in Kubernetes
 
+Switch both offices to local mode. B creates Alice’s booking, A learns it through replication, and A then rejects Bob using its own records.
+
+[All lessons](README.md)
+
 ## Checkpoint and prerequisites
 
 Source: `6a863177b187d304f292f97eb812b2a60cf25d01` (`6a86317`) — Enable local booking and asynchronous replication in Kubernetes.
@@ -142,6 +146,9 @@ ask_office b /seat
 
 Expect HTTP 409 for Bob and HTTP 200 for both final reads. A rejects Bob using its own replicated records; it does not forward that decision to B.
 
+<details>
+<summary>Observed learner results</summary>
+
 ## Observed learner results
 
 | Check | Supplied result |
@@ -159,6 +166,8 @@ Both final reads contained:
 ```
 
 The learner did not observe an intermediate empty read at A after booking. Do not invent a visible lag or infer an exact replication duration from this output. These results were supplied by the learner before commit 6a86317; no independent runtime validation is claimed here.
+
+</details>
 
 ## Troubleshooting
 
@@ -183,3 +192,7 @@ This experiment shows local decisions plus successful asynchronous delivery over
 End state: both offices run in local mode, both hold Alice's B-originated record, and the partition policy is absent. Leave that state in place until the next lesson explains how to prepare an empty partitioned experiment.
 
 Implementation was committed at 6a86317. This note follows that verified commit and should be reviewed and committed as documentation. Next we will deliberately isolate the offices, compare their independent decisions, and inspect the records after communication returns.
+
+---
+
+Next: [22 — Available local bookings, then conflict after recovery](22-kubernetes-partition-conflict.md).

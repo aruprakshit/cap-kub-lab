@@ -1,5 +1,9 @@
 # 18 — A stable Service can follow replacement Pods
 
+A Service gives the client a stable destination while Pod IPs change. Check both the endpoint update and a real request after replacement.
+
+[All lessons](README.md)
+
 ## Checkpoint and prerequisites
 
 Source commit: `1005f164770ba526272406696046388499acfd41` (`1005f16`) — Add a ClusterIP Service for stable office A discovery.
@@ -132,3 +136,7 @@ The office Deployment and Service remain. Closing a terminal or deleting this cl
 A Service gives stable in-cluster discovery while selected Pod destinations change. Stability lasts for the lifetime of the Service; deleting/recreating the Service can allocate a different ClusterIP. Neither the Service nor the replacement process restores in-memory bookings.
 
 The learner committed 1005f16, including the commented Service manifest and earlier documentation updates. This note references that commit. All requested checks are now confirmed, including HTTP 200 after replacement. On replay, perform step 5 before advancing. No additional source commit is needed solely for this verification.
+
+---
+
+Next: [19 — Two Services, one booking authority](19-two-offices-in-kubernetes.md).

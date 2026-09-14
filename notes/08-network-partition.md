@@ -1,5 +1,9 @@
 # 08 — Isolate B while both offices remain running
 
+Disconnect the offices without stopping them. B refuses authoritative operations during isolation, then recovers when the connection returns.
+
+[All lessons](README.md)
+
 **Source:** `47c24dd06f21ff9724014de7bf7b0522fea36f3f` — Separate office access and coordination networks for partition testing. Application still uses a fixed authority.
 
 **Prediction:** B's health remains 200, but reads and bookings return 503; A still serves Alice. Reconnecting restores B without erasing Alice.
@@ -107,3 +111,7 @@ Require 200 and Alice. Reconnect even if step 3 did not match expectations. If t
 The original learner supplied all predicted results, including Alice after reconnection. This demonstrates refusal of authoritative operations on the isolated side. Successful reads from A alone do not make operations available to clients isolated at B. B had no independent writes to reconcile: it resumed asking A.
 
 **End state:** both connected, Alice retained. Leave running for the optional forensic replay in [lesson 09](09-docker-desktop-forwarding.md). This is a teaching example with no durable storage or failover, not a proof that every possible history satisfies a production consistency guarantee.
+
+---
+
+Next: [10 — Select a strategy and preserve booking identities](10-booking-records-and-modes.md).

@@ -1,5 +1,9 @@
 # 22 — Available local bookings, then conflict after recovery
 
+Reset both offices, isolate them, and book at each. Recovery delivers both confirmations; neither office chooses which customer gets the seat.
+
+[All lessons](README.md)
+
 ## Checkpoint and learning objective
 
 Source checkpoint: `6a863177b187d304f292f97eb812b2a60cf25d01` (`6a86317`). This experiment reuses the local-mode Deployments and existing partition-offices NetworkPolicy manifest; no new implementation is required.
@@ -124,6 +128,9 @@ ask_office b /book '{"customer":"Charlie"}'
 
 Expect both to return 409 with the known records. This prevents a third booking; it does not undo either earlier confirmation or select a winner.
 
+<details>
+<summary>Observed learner evidence</summary>
+
 ## Observed learner evidence
 
 Both rollouts completed successfully. Both health endpoints returned 200, and both initial seat reads returned 200 with empty records.
@@ -152,6 +159,8 @@ The supplied output begins at scale-up; the scale-down, deletion wait, and polic
 
 Your replay UUIDs will differ. The important evidence is that each confirmed ID survives and appears at both offices after recovery.
 
+</details>
+
 ## Connect the dots
 
 | Question | Authority-mode experiment | Local-mode experiment |
@@ -175,3 +184,7 @@ This demonstrates the tradeoff under the tested partition. It does not prove eve
 End with the policy absent, both Deployments at one replica, and both offices retaining the two conflicting records. Preserve this state until the next lesson specifies any reset.
 
 No application or manifest change was needed. Review and commit this documentation together with any still-pending lesson 21 documentation; the source checkpoint remains 6a86317.
+
+---
+
+Next: [23 — A declarative client with an OptionParser utility](23-declarative-client-utility.md).

@@ -1,5 +1,9 @@
 # 06 — Two entry points, one authority
 
+B now asks A to make the decision. Booking through either office consults the same authority, so Bob is rejected after Alice succeeds.
+
+[All lessons](README.md)
+
 **Source:** `981fa2e9a320f2975124ad865355d3c514ca5988` — Route bookings and reads through office A as the fixed authority.
 
 **Prediction:** a booking through B and a later booking through A consult the same state, so Alice succeeds and Bob is rejected.
@@ -71,3 +75,7 @@ Both must return 200 and `{"seat":"A1","available":false,"customer":"Alice"}`. T
 **Meaning:** B has no synchronized replica; a successful B read is an A read relayed back. We traded independent decisions for a dependency on A. A remains fixed, with volatile state and no failover.
 
 **End state:** both running, Alice at A. Do NOT reset before [lesson 07](07-authority-outage.md), which deliberately stops A and observes the consequence.
+
+---
+
+Next: [07 — Process health is not operation availability](07-authority-outage.md).

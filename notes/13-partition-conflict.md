@@ -1,5 +1,9 @@
 # 13 — Available decisions, converged records, unresolved conflict
 
+Both isolated offices can confirm a customer. After reconnecting, they agree on two records—but agreement does not fix the double booking.
+
+[All lessons](README.md)
+
 **Source:** `e4b07a5` (same as lesson 12). **No source change.**
 
 **Prediction:** partition empty offices; A confirms Alice, B confirms Bob. Heal; both learn both records and flag conflict. Further delivery must not increase the count.
@@ -76,6 +80,9 @@ Require two records on each side, same IDs/contents, available false/conflict tr
 
 Repeat both reads a few seconds later. Require exactly two records, not three or four. Full-state re-sends do not create new IDs, and the receiver does not duplicate existing IDs.
 
+<details>
+<summary>Original evidence</summary>
+
 ## Original evidence
 
 A's post-recovery read returned HTTP 200:
@@ -87,6 +94,8 @@ A's post-recovery read returned HTTP 200:
 B returned HTTP 200 with the same records in reverse order. Hash insertion order explains that difference: each office inserted its own confirmation first. Compare sets by ID, not JSON byte-for-byte order.
 
 The learner later confirmed the count stayed two. Partition-time responses were not pasted for the original run; the tutorial's validation report separately records replay checks, rather than inventing historical transcripts.
+
+</details>
 
 ## What changed and what did not?
 
@@ -102,3 +111,7 @@ Reconciliation of stored records cannot erase promises already returned to custo
 This is a teaching demonstration, not a formal proof of every CAP property under arbitrary failures. No persistence, failover, authentication, deletion protocol, or Kubernetes deployment has been implemented.
 
 **End state:** both connected, both contain the conflict. If finished, `dc down --remove-orphans` stops only the tutorial and erases these bookings. No new application commit was needed for this experiment. Review [the glossary and troubleshooting guide](14-troubleshooting.md) before moving to Kubernetes.
+
+---
+
+Next: [17 — Run an office in Kubernetes and observe Pod replacement](17-k3d-deployment-and-recovery.md).

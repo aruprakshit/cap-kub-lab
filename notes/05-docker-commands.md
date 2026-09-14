@@ -1,5 +1,9 @@
 # 05 — Command reference and the original build history
 
+Use this page when you need to look up a Docker command. It is a reference, not another experiment to run from top to bottom.
+
+[All lessons](README.md)
+
 This page is a reference, not a script to execute in order. For the next experiment, go to [lesson 06](06-authoritative-office.md). All tutorial commands use the helpers from [start here](00-start-here.md).
 
 ## What each Docker command changes
@@ -28,6 +32,9 @@ An image is a template, a container is a running/stopped instance, and a process
 `dc` is not a Docker command. It is a transparent Bash function wrapping `docker compose` with a separate project name and documented overlay files. See its definition using `declare -f dc`.
 
 For example, original lesson commands used `docker compose up --build` and host port 4567. The tutorial uses `dc up -d --build` and port 14567. These deliberate execution-environment differences do not modify app.rb or its internal port.
+
+<details>
+<summary>Original project creation commands</summary>
 
 ## Original project creation commands
 
@@ -76,6 +83,11 @@ docker compose up -d --build
 
 These belong to different source versions. They are collected for reference, not intended to be run against the latest code as one sequence.
 
+</details>
+
+<details>
+<summary>How to inspect code evolution</summary>
+
 ## How to inspect code evolution
 
 From the tutorial worktree:
@@ -91,8 +103,15 @@ git diff b2425cb e4b07a5 -- app.rb
 
 These read history without changing files. `git switch --detach COMMIT` changes the replay worktree and is only used after stopping its previous containers. If it refuses due to local edits, preserve/review those edits; do not use a destructive reset to force the tutorial forward.
 
+</details>
+
+<details>
+<summary>Commit discipline</summary>
+
 ## Commit discipline
 
 In development: implement one learning, test it, explicitly mark a checkpoint, commit code, then write notes against the resulting hash. In replay: no new source commit is necessary merely for running an experiment. Do not commit generated bookings; they exist only in memory.
 
 README.md and the tutorial notes are now tracked and shared in Git. Ordinary `git add` stages edits to tracked files even if an existing ignore pattern matches them. If adding a new note, check `git status` and `git check-ignore` if it does not appear; ignore patterns can still affect new, untracked files.
+
+</details>
