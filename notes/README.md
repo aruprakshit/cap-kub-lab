@@ -59,3 +59,5 @@ Continue with [18 — stable Service discovery across Pod replacement](18-servic
 [21 — local booking and asynchronous replication](21-kubernetes-local-replication.md) records the connected replication baseline at 6a86317, including the mode transition, rollout order, and verified booking results.
 
 [22 — local bookings during partition and conflict after recovery](22-kubernetes-partition-conflict.md) reuses 6a86317 and records independent confirmations, convergence, and the distinction between shared records and a resolved business conflict.
+
+[23 — declarative client and OptionParser utility](23-declarative-client-utility.md) documents checkpoint 59d4eee: a plain Ruby client Deployment, Kustomize-generated ConfigMap, volume mount, and tracked terminal launcher.

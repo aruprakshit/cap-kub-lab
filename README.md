@@ -37,3 +37,5 @@ The Ruby application Kubernetes sequence continues with [Service discovery](note
 [Local booking and asynchronous replication in Kubernetes](notes/21-kubernetes-local-replication.md) continues the tutorial at source checkpoint `6a86317`, with both offices making local decisions and exchanging records through Services.
 
 [Partitioned local bookings and conflict after recovery](notes/22-kubernetes-partition-conflict.md) demonstrates both offices confirming the same seat and later retaining both records.
+
+[Declarative client tooling](notes/23-declarative-client-utility.md) adds the reusable `./bin/ask` command and explains its Deployment, ConfigMap, and Kustomize update workflow at `59d4eee`.
