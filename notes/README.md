@@ -55,3 +55,7 @@ Continue with [18 — stable Service discovery across Pod replacement](18-servic
 [19 — two offices with Service-based forwarding](19-two-offices-in-kubernetes.md) records the successful authority-mode experiment at c49c141 and includes the reusable in-cluster client helper.
 
 [20 — authority-mode partition with NetworkPolicy](20-kubernetes-network-partition.md) records the partition and recovery at e267954, including client labels, policy selectors, observed failures, and restoration checks.
+
+[21 — local booking and asynchronous replication](21-kubernetes-local-replication.md) records the connected replication baseline at 6a86317, including the mode transition, rollout order, and verified booking results.
+
+[22 — local bookings during partition and conflict after recovery](22-kubernetes-partition-conflict.md) reuses 6a86317 and records independent confirmations, convergence, and the distinction between shared records and a resolved business conflict.
