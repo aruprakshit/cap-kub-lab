@@ -45,10 +45,18 @@ spec:
 
           # Environment variables for the Ruby process.
           env:
+            # Identify records created by this office.
             - name: OFFICE
               value: a
+
+            # Decide bookings using this process's own records.
+            # This also enables the application's replication loop.
             - name: COORDINATION_MODE
-              value: authority
+              value: local
+
+            # Send records to B through B's Kubernetes Service.
+            - name: PEER_URL
+              value: http://office-b:4567
 
           # Readiness configuration for this container.
           # This is NOT a separate Kubernetes resource.

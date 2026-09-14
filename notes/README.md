@@ -53,3 +53,5 @@ The Kubernetes sequence starts with [17 — k3d, Deployment, and Pod replacement
 Continue with [18 — stable Service discovery across Pod replacement](18-service-discovery.md), source commit 1005f16. This covers only the Ruby application resources.
 
 [19 — two offices with Service-based forwarding](19-two-offices-in-kubernetes.md) records the successful authority-mode experiment at c49c141 and includes the reusable in-cluster client helper.
+
+[20 — authority-mode partition with NetworkPolicy](20-kubernetes-network-partition.md) records the partition and recovery at e267954, including client labels, policy selectors, observed failures, and restoration checks.

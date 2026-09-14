@@ -31,3 +31,5 @@ Current application source: `e4b07a5`. It has local/authority modes, in-memory b
 ## Sharing the tutorial
 
 The README and tutorial notes are tracked in Git and available on GitHub. Clone the repository to get both the application and the documentation, then follow [Start here](notes/00-start-here.md).
+
+The Ruby application Kubernetes sequence continues with [Service discovery](notes/18-service-discovery.md), [two offices sharing one authority](notes/19-two-offices-in-kubernetes.md), and [a NetworkPolicy partition and recovery](notes/20-kubernetes-network-partition.md). The partition lesson records learner-verified results at `e267954`.

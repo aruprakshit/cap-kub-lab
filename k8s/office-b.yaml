@@ -32,17 +32,16 @@ spec:
               containerPort: 4567
 
           env:
-            # Identify this process as office B.
+            # Identify records created by this office.
             - name: OFFICE
               value: b
 
-            # B must consult A for reads and bookings.
+            # B now makes local decisions instead of forwarding to A.
             - name: COORDINATION_MODE
-              value: authority
+              value: local
 
-            # Resolves to A's Service in the same namespace.
-            # Do not use A's replaceable Pod IP.
-            - name: AUTHORITY_URL
+            # Send records to A through A's Kubernetes Service.
+            - name: PEER_URL
               value: http://office-a:4567
 
           # Check B's local health endpoint.
