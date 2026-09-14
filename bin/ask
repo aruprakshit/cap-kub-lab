@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Run the mounted Ruby utility inside the client Deployment.
+# "$@" preserves each argument, including JSON containing spaces.
+exec kubectl --context=k3d-cap-kub-lab -n cap-lab \
+  exec deployment/service-client -c client -- \
+  ruby /tools/ask.rb "$@"

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  # Name used by kubectl to address this Deployment.
+  name: service-client
+  namespace: cap-lab
+
+spec:
+  # Keep one client Pod running.
+  replicas: 1
+
+  # Identify the Pods managed by this Deployment.
+  selector:
+    matchLabels:
+      app: service-client
+
+  template:
+    metadata:
+      labels:
+        # Connect this Pod to the Deployment selector above.
+        app: service-client
+
+        # Connect this Pod to our NetworkPolicy's allowed sources.
+        # Replacement Pods automatically receive this label too.
+        role: client
+
+    spec:
+      containers:
+        - name: client
+
+          # Ruby provides everything needed for our HTTP requests.
+          image: ruby:4.0.6-alpine
+
+          # Download the image if this node does not already have it.
+          imagePullPolicy: IfNotPresent
+
+          # Keep the client running for kubectl exec commands.
+          command:
+            - ruby
+            - -e
+            - sleep
+          volumeMounts:
+            # Connect this container mount to the volume below.
+            - name: client-tools
+
+              # ConfigMap key ask.rb becomes /tools/ask.rb.
+              mountPath: /tools
+              readOnly: true
+      volumes:
+        - name: client-tools
+          configMap:
+            # Name of the ConfigMap created in step 2.
+            name: service-client-tools
